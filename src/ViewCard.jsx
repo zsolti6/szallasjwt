@@ -1,12 +1,42 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+import axios from 'axios';
 
-export const ViewCard = ({ data }) => {
+export const ViewCard = ({ token }) => {
   const { id } = useParams();
-  const card = data.find((item) => item.id === parseInt(id));
+  const [card, setCard] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchCard = async () => {
+      try {
+        const response = await axios.get(`http://szallasjwt.sulla.hu/data/${id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        setCard(response.data);
+      } catch (err) {
+        setError('Nem tudom megjeleníteni');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCard();
+  }, [id, token]);
+
+  if (loading) {
+    return <p>Betöltés...</p>;
+  }
+
+  if (error) {
+    return <p>{error}</p>;
+  }
 
   if (!card) {
-    return <p>Card not found</p>;
+    return <p>Nem található a szállás.</p>;
   }
 
   return (

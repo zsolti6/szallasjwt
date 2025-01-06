@@ -8,33 +8,32 @@ export const DeleteCard = ({ data, setData, token }) => {
 
   const handleDelete = async () => {
     try {
-      await axios.delete(`http://szallasjwt.sulla.hu/postszallas/${id}`, {
+      await axios.delete(`http://szallasjwt.sulla.hu/data/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
       setData((prevData) => prevData.filter((item) => item.id !== id));
-      alert('Card deleted successfully');
+      alert('Sikeres törlés');
     } catch (error) {
-      console.error('Failed to delete the card:', error);
-      alert('Failed to delete the card');
+      alert('Hiba a törlés során');
     }
   };
 
   if (!card) {
-    return <p>Card not found</p>;
+    return <p>Nem létezik ilyen szállás</p>;
   }
 
   return (
     <div className="container mt-4">
       <div className="card">
         <div className="card-header">
-          <h2>Delete Card</h2>
+          <h2>Szállás törlése</h2>
         </div>
         <div className="card-body">
-          <p>Are you sure you want to delete the following card?</p>
+          <p>Biztosan törölni akarja?</p>
           <p><strong>{card.name}</strong></p>
-          <button className="btn btn-danger" onClick={handleDelete}>Delete</button>
+          <button className="btn btn-danger" onClick={handleDelete}>Törlés</button>
         </div>
       </div>
     </div>

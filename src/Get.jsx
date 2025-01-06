@@ -1,23 +1,33 @@
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { FaEye, FaEdit, FaTrash } from 'react-icons/fa'; // Importing Bootstrap icons
+import { FaEye, FaEdit, FaTrash } from 'react-icons/fa';
+import axios from 'axios';
 
 export const GetSzallasok = ({ token, data, setData }) => {
   useEffect(() => {
     if (token) {
-      adatLekeres(); // Fetch data when token is available
+      adatLekeres();
     }
-  }, [token, setData]); 
+  }, [token, setData]);
 
   const adatLekeres = async () => {
-    // Fetch data based on token...
+    try {
+      const response = await axios.get('http://szallasjwt.sulla.hu/data', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setData(response.data);
+    } catch (error) {
+      //console.error('Failed to fetch data:', error);
+    }
   };
 
   return (
     <div className="container">
-      <div className="row">
+      <div className="row mb-4">
         {data.map((item) => (
-          <div className="col col-md-3" key={item.id}>
+          <div className="col col-md-3 mb-4" key={item.id}>
             <div className="card">
               <div className="card-header">
                 <h2>{item.name}</h2>
